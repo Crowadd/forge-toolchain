@@ -1,0 +1,33 @@
+forge-toolchain: softwares to compile C code into an executable file
+forge-cc: C compiler
+
+------------------------------------------
+requisitos:
+	- target: x86-64 ELF
+	- support: Unix like OSs (linux, macos...) + Windows
+	- Follow the lastest Standart C documentation for the compiler
+	- support multiple encoding types
+	- support common flags from gcc and clang
+-------------------------------------------
+
+global structs for all 3 softwares of forge-toolchain:
+	- File management
+	- char analyser
+	- debugging functions
+	- error and warning alerts functions
+	- allocation memory wrappers
+
+-------------------------------------------
+
+global structs for forge-cc:
+	- Tokenize: CPP and C share almost the same tokens
+
+forge-cc:
+	- Preprocessor:
+		- Lexer -> tokenize file
+		- execute the tokens
+		- generate final file and return
+
+		
+
+	

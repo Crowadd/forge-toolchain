@@ -1,0 +1,23 @@
+How the C preprocessor works in detail:
+The main function of the preprocessor is a recursive function that
+
+	 --------------------------------------- 
+	|-> remove \ followed by newline        |
+	|-> remove comments                     |
+    ----|-> tokenize - initial 256 tokens chunk | <--------
+   |	 ---------------------------------------       	   |
+   |                                                       |
+   |                                                       |
+   |	 -----------------------------------------------   |
+    ->	|When limit exceed:                             |  |
+	| -> double capacity                            |  |
+	| -> Execute preprocess + error, warning checks	|--
+	| -> write to final buffer                      |
+	 -----------------------------------------------
+
+special cases:
+	- If incomplete token context, backwards until the previous complete token context
+	- If find #include, call recursively the preprocessor function and free the memory allocated
+
+maybe works:
+	- Macros expansion can write directly to the final buffer

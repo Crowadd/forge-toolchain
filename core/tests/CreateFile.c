@@ -1,7 +1,5 @@
 #include <stdio.h>
-
-#define PROGRAM_NAME "filetest" 
-#include "../file.h"
+#include "core.h"
 
 int main(int argc, char **argv)
 {
@@ -13,6 +11,8 @@ int main(int argc, char **argv)
 	FileInfo file = {0};
 	if(CopyFile(&file, argv[1]))
 		return 1;
-	printf("%s\n", file.fileData);
+
+	file.filePath = argv[2];
+	CreateFile(file);
 	return 0;
 }

@@ -1,2 +1,11 @@
-fix core/file.c
-create Makefile for core/tests
+Global structs for forge-toolchain:
+
+wrappers OK
+fix core/file.c OK
+create Makefile for core/tests OK
+wrapper for realloc OK
+
+CLI parser for all requirements
+debugging functions
+Makefile for forge-cc
+

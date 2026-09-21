@@ -4,10 +4,12 @@ forge-cc: C compiler
 ------------------------------------------
 requisitos:
 	- target: x86-64 ELF
-	- support: Unix like OSs (linux, macos...) + Windows
+	- support: POSIX (linux, macos...) + Windows
 	- Follow the lastest Standart C documentation for the compiler
 	- support multiple encoding types
 	- support common flags from gcc and clang
+E,S,c,o,I,D,U,include,std=,Wall,Wextra,Werror,w,pedantic,pedantic-errors,g,O0,O1,O2,O3
+	- Generate warning and errors from compilation
 -------------------------------------------
 
 global structs for all 3 softwares of forge-toolchain:

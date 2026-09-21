@@ -3,7 +3,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "cpp.h"
+#include "core.h"
+//#include "cpp.h"
 
 void usage()
 {
@@ -26,6 +27,7 @@ void version()
 
 int main(int argc, char **argv)
 {
+	// POSIX IMPLEMENTATION WITH GETOPT
 
 	arguments args = {0};
 
@@ -45,7 +47,7 @@ int main(int argc, char **argv)
 		case 'E': args.preProcessorFile = true; break;
 		case 'D':
 			args.countMacros++;
-			args.macros = realloc(args.macros, args.countMacros * sizeof(char *));
+			args.macros = xrealloc(args.macros, args.countMacros * sizeof(char *));
 			args.macros[args.countMacros-1] = optarg;
 			break;
 		}
@@ -56,7 +58,8 @@ int main(int argc, char **argv)
 		fprintf(stderr, "file missing\n");
 		exit(EXIT_FAILURE);
 	}
-	Cpp(filePath, args);	
+	//Cpp(filePath, args);	
 
+	// WINDOWS CLI PARSER IMPLEMENTATION WITH C STANDARTS
 
 }

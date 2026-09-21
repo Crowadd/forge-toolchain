@@ -1,8 +1,7 @@
-#ifndef PROGRAM_NAME
-#define PROGRAM_NAME "u forgot to set PROGRAM_NAME"
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include "core.h"
 
-#include "wrappers.h"
 FILE *xfopen(char *path, char *mode)
 {
 	FILE *file = fopen(path, mode);
@@ -15,7 +14,7 @@ FILE *xfopen(char *path, char *mode)
 int xfseek(FILE *stream, long offset, int whence)
 {
 	int ret = fseek(stream, offset, whence);
-	if (ret){
+	if (ret == -1){
 		perror(PROGRAM_NAME);
 		exit(EXIT_FAILURE);
 	}
@@ -45,12 +44,7 @@ void *xmalloc(size_t size)
 
 size_t xfread(void *ptr, size_t size, size_t n, FILE *stream)
 {
-	size_t ret = fread(ptr, size, n, stream);
-	if (!ret){
-		perror(PROGRAM_NAME);
-		exit(EXIT_FAILURE);
-	}
-	return ret; 
+	return fread(ptr, size, n, stream);
 }
 
 size_t xfwrite(void *ptr, size_t size, size_t n, FILE *stream)
@@ -67,6 +61,16 @@ size_t xfwrite(void *ptr, size_t size, size_t n, FILE *stream)
 int xfclose(FILE *stream)
 {
 	int ret = fclose(stream);
+	if (ret){
+		perror(PROGRAM_NAME);
+		exit(EXIT_FAILURE);
+	}
+	return ret;
+}
+
+void *xrealloc(void *p, size_t size)
+{
+	void *ret = realloc(p, size);
 	if (!ret){
 		perror(PROGRAM_NAME);
 		exit(EXIT_FAILURE);

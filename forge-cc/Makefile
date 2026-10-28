@@ -4,9 +4,11 @@ CFLAGS := -Wall -Wextra -I../core -I.
 
 # Define the default version (can be overridden from the command line)
 VERSION ?= "0.0.0"
+PROGRAM_NAME ?= "forge-cc"
 
 # Pass VERSION as a string literal to CFLAGS
 CFLAGS += -DVERSION=\"$(VERSION)\"
+CFLAGS += -DPROGRAM_NAME=\"$(PROGRAM_NAME)\"
 
 # Output binary name
 TARGET := forge-cc 

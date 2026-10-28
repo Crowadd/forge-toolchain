@@ -1,11 +1,12 @@
 #include "CliParser.h"
 #include <stdio.h>
 
-int main(int argc, char *argv[])
+int main(int argc, const char *argv[])
 {
 	struct CliOption cli[] = {
 		{'h', "help", NO_ARGUMENT},
 		{'v', "version", NO_ARGUMENT},
+		{'a', "verdade", NO_ARGUMENT},
 		{'o', "output", ARGUMENT_REQUIRED},
 		{'D', NULL, ARGUMENT_REQUIRED},
 		{0, NULL, 0}
@@ -26,6 +27,9 @@ int main(int argc, char *argv[])
 			break;
 		case 'D':
 			printf("#define %s\n", ret.argument);
+			break;
+		case 'a':
+			printf("TA FUNCIONANDO\n");
 			break;
 		case -1:
 			printf("Unknow option!\n");

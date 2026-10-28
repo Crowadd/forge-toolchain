@@ -1,17 +1,19 @@
-enum argument {NO_ARGUMENT, ARGUMENT_REQUIRED};
+#ifndef CLIPARSER_H
+#define CLIPARSER_H
 
-struct CliOption {
+typedef struct CliOption {
 	char option;
-	char *longOption;
-	enum argument arg;
-};
+	const char *longOption;
+	enum {NO_ARGUMENT, ARGUMENT_REQUIRED} arg;
+} CliOption;
 
-struct CliReturn {
+typedef struct CliReturn {
 	char option;
-	char *argument;
-	char *current;
+	const char *argument;
+	const char *current;
 	int argc;
-};
+} CliReturn;
 
-struct CliReturn CliParse(struct CliOption cli[], struct CliReturn *ret, int argc, char *argv[]);
+CliReturn CliParse(CliOption cli[], CliReturn *ret, int argc, const char *argv[]);
 
+#endif

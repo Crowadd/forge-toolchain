@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "core.h"
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
 	if (argc < 2){
 		fprintf(stderr, "Input a file!\n");
@@ -9,10 +9,11 @@ int main(int argc, char **argv)
 	}
 
 	FileInfo file = {0};
-	if(CopyFile(&file, argv[1]))
+	if(ReadFile(&file, argv[1]))
 		return 1;
 
 	file.filePath = argv[2];
-	CreateFile(file);
+	CreateNewFile(&file);
+	FreeFileInfo(&file);
 	return 0;
 }

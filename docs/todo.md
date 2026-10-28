@@ -1,2 +1,3 @@
 - [ X ] CLI parser API for all applications
-- [ ] Prepare the enviroment for all flags that will be used
+- [ X ] Prepare the enviroment for all flags that will be used
+- [  ] Preprocess

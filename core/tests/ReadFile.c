@@ -9,8 +9,9 @@ int main(int argc, char **argv)
 	}
 
 	FileInfo file = {0};
-	if(CopyFile(&file, argv[1]))
+	if(ReadFile(&file, argv[1]))
 		return 1;
 	printf("%s\n", file.fileData);
+	FreeFileInfo(&file);
 	return 0;
 }

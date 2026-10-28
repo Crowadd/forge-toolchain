@@ -1,6 +1,0 @@
-Basic functions to manipulate files
-
-FileInfo -> struct of the files informations
-
-CopyFile() -> copies file to a buffer and define its structure
-CreateFile() -> receive a FileInfo struct and the path of the new file, copies the data of the buffer to the file

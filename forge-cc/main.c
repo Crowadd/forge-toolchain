@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "core.h"
+
 
 void usage()
 {
@@ -9,14 +11,24 @@ void usage()
 Usage: forge-cc [OPTION...] [FILE...]\n\
 	-h --help                 Display help information\n\
 	-v --version              Current version of forge-cc\n\
-	-o --output FILE_NAME     Output file name\
+	-o --output FILE_NAME     Output file name\n\
+	-E --preprocess           Preprocess only\n\
+	-S --assembler            Assemble only\n\
+	-c --compile              compile without linking\n\
+	-D --define-macro NAME    Define macro\n\
+	-U --undefine-macro NAME  Undefine macro\n\
+	-I --include-directory    Include directory for preprocess\n\
+	-i --include FILE_NAME	  Include like #include\n\
+	-s --std NAME             C standart to be used\n\
+	-W --warning NAME         Warning type to be used\n\
+	-g --debug                Aditional information debugging\n\
+	-O --optimize NAME        Optimization level\n\
 ");
 }
 
 void version()
 {
-	printf("forge-cc ");
-	puts(VERSION);
+	printf("%s: %s\n", PROGRAM_NAME, VERSION);
 }
 
 int main(int argc, char *argv[])
@@ -24,19 +36,28 @@ int main(int argc, char *argv[])
 
 	struct flags {
 		char *output;
+		char *std;
+		char *optimization;
 
 		char **macros;
-		int macroCount;
+		unsigned int macroCount;
 
 		char **undefMacros;
-		int undefMacroCount;
+		unsigned int undefMacroCount;
 
 		char **directories;
-		int dirCount;
+		unsigned int dirCount;
+
+		char **includes;
+		unsigned int includeCount;
+
+		char **warnings;
+		unsigned int warnCount;
 
 		bool preprocess;
 		bool assemble;
 		bool compile;
+		bool debug;
 		
 	} flags = {0};
 
@@ -50,7 +71,11 @@ int main(int argc, char *argv[])
 		{'D', "define-macro", 1},
 		{'U', "undefine-macro", 1},
 		{'I', "include-directory", 1},
-		
+		{'i', "include", 1},
+		{'s', "std", 1},
+		{'W', "warning", 1},
+		{'g', "debug", 0},
+		{'O', "optimize", 1},
 		{0, NULL, 0}
 	};
 
@@ -61,9 +86,12 @@ int main(int argc, char *argv[])
 		case 'h': usage(); return 0;
 		case 'v': version(); return 0;
 		case 'o': flags.output = ret.argument; break;
+		case 's': flags.std = ret.argument; break;
 		case 'E': flags.preprocess = true; break;
 		case 'S': flags.assemble = true; break;
 		case 'c': flags.compile = true; break;
+		case 'g': flags.debug = true; break;
+
 		case 'D':
 			  flags.macroCount++;
 			  flags.macros = xrealloc(flags.macros, flags.macroCount*sizeof(char *));
@@ -72,12 +100,22 @@ int main(int argc, char *argv[])
 		case 'U':
 			  flags.undefMacroCount++;
 			  flags.undefMacros = xrealloc(flags.undefMacros, flags.undefMacroCount*sizeof(char *));
-			  flags.macros[flags.macroCount - 1] = ret.argument;
+			  flags.undefMacros[flags.undefMacroCount - 1] = ret.argument;
 			  break;
 		case 'I':
 			  flags.dirCount++;
 			  flags.directories = xrealloc(flags.directories, flags.dirCount*sizeof(char *));
 			  flags.directories[flags.dirCount - 1] = ret.argument;
+			  break;
+		case 'i':
+			  flags.includeCount++;
+			  flags.includes = xrealloc(flags.includes, flags.includeCount*sizeof(char *));
+			  flags.includes[flags.includeCount - 1] = ret.argument;
+			  break;
+		case 'W':
+			  flags.warnCount++;
+			  flags.warnings = xrealloc(flags.warnings, flags.warnCount*sizeof(char *));
+			  flags.warnings[flags.warnCount - 1] = ret.argument;
 			  break;
 
 		case -1: usage(); return 1;
@@ -87,26 +125,18 @@ int main(int argc, char *argv[])
 
 	// E,S,c,o,I,D,U,include,std=,Wall,Wextra,Werror,w,pedantic,pedantic-errors,g,O0,O1,O2,O3
 	
-	if (flags.preprocess){
-		printf("Preprocess only! ");
-		printf("output: %s\n", (flags.output) ? flags.output : "stdout");
+	if (ret.argc > argc || argc < 2){
+		fprintf(stderr, "%s: No input file\n", PROGRAM_NAME);
+		return 1;
 	}
+	
+	FileInfo file;
+	if (!CopyFile(&file, argv[ret.argc - 1]))
+		printf("%s\n", file.fileData);
 
-	if (flags.macroCount)
-		for (int i = 0; i < flags.macroCount; i++)
-			printf("%d: %s\n", i, flags.macros[i]);
-
-	if (flags.undefMacroCount)
-		for (int i = 0; i < flags.undefMacroCount; i++)
-			printf("%d: %s\n", i, flags.undefMacros[i]);
-
-	if (flags.dirCount)
-		for (int i = 0; i < flags.dirCount; i++)
-			printf("%d: %s\n", i, flags.directories[i]);
-
-	if (flags.output)
-		printf("output: %s\n", flags.output);
-
+		
+	
+	
 
 	return 0;
 }

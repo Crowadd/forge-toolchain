@@ -14,7 +14,7 @@ CliReturn CliParse(CliOption *cli, CliReturn *ret, int argc, const char *argv[])
 		ret->argc = 1;
 	}
 
-	if (ret->argc == argc)
+	if (ret->argc == argc && !ret->current)
 		return (CliReturn){.argc = ret->argc};
 
 	if (ret->argc < argc && !ret->current)
@@ -26,20 +26,38 @@ CliReturn CliParse(CliOption *cli, CliReturn *ret, int argc, const char *argv[])
 		return (CliReturn){.argc = ret->argc};
 
 	bool isInvalid = true;
+	bool isLongOption = false;
 
 	if (argv[ret->argc-1][1] == '-'){
 		if (argv[ret->argc-1][2] == '\0')
 			return (CliReturn){.argc = ret->argc};
 
-		//return ParseLongOption();
+		isLongOption = true;
 	}
 
 	ret->current++;
 	
 	while (cli->option){
-		if (*ret->current == cli->option){
-			ret->option = cli->option;
-			isInvalid = false;
+		if (isLongOption && cli->longOption){
+			ret->current++;
+			size_t longOptionSize = strlen(cli->longOption);
+			if (longOptionSize > strlen(ret->current)){
+				cli++;
+				continue;
+			}
+			if (!memcmp(ret->current, cli->longOption, longOptionSize)){
+				ret->option = cli->option;
+				isInvalid = false;
+				ret->current += longOptionSize;
+				break;
+			}
+				
+		} else {
+			if (*ret->current == cli->option){
+				ret->option = cli->option;
+				isInvalid = false;
+				break;
+			}
 		}
 		cli++;
 	}
@@ -48,14 +66,14 @@ CliReturn CliParse(CliOption *cli, CliReturn *ret, int argc, const char *argv[])
 		return (CliReturn){.option = -1, .argc = ret->argc};
 
 	if (cli->arg == NO_ARGUMENT){
-		if (*(ret->current + 1) == '\0'){
+		if (*(ret->current + 1) == '\0' || isLongOption){
 			ret->current = NULL;
 			return *ret;
 		}
 		return *ret;
 	}
 
-	if (*(ret->current + 1) == '\0'){
+	if (*(ret->current + 1) == '\0' || (isLongOption && *(ret->current) != '-')){
 		if (ret->argc < argc){
 			ret->argc++;
 			ret->argument = argv[ret->argc-1];

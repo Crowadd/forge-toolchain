@@ -4,11 +4,12 @@
 typedef struct CliOption {
 	char option;
 	const char *longOption;
+	int retOption;
 	enum {NO_ARGUMENT, ARGUMENT_REQUIRED} arg;
 } CliOption;
 
 typedef struct CliReturn {
-	char option;
+	int retOption;
 	const char *argument;
 	const char *current;
 	int argc;

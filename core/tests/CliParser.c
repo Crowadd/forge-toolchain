@@ -4,18 +4,18 @@
 int main(int argc, const char *argv[])
 {
 	struct CliOption cli[] = {
-		{'h', "help", NO_ARGUMENT},
-		{'v', "version", NO_ARGUMENT},
-		{'a', "verdade", NO_ARGUMENT},
-		{'o', "output", ARGUMENT_REQUIRED},
-		{'D', NULL, ARGUMENT_REQUIRED},
-		{0, NULL, 0}
+		{0, "help", 'h', NO_ARGUMENT},
+		{'v', "version", 'v', NO_ARGUMENT},
+		{'a', "verdade", 'a', NO_ARGUMENT},
+		{'o', "output", 'o', ARGUMENT_REQUIRED},
+		{'D', NULL, 'D', ARGUMENT_REQUIRED},
+		{0, NULL, 0, 0}
 	};
 
 	struct CliReturn ret = {0};
 	do {
 		ret = CliParse(cli, &ret, argc, argv);
-		switch(ret.option){
+		switch(ret.retOption){
 		case 'h':
 			printf("HELP\n");
 			break;
@@ -34,7 +34,10 @@ int main(int argc, const char *argv[])
 		case -1:
 			printf("Unknow option!\n");
 			break;
+		case ':':
+			printf("Missing argument!\n");
+			break;
 		}
-	} while (ret.option);
+	} while (ret.retOption);
 	printf("program args: %s\n", argv[ret.argc-1]);
 }

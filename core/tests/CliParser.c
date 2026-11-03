@@ -14,7 +14,7 @@ int main(int argc, const char *argv[])
 
 	struct CliReturn ret = {0};
 	do {
-		ret = CliParse(cli, &ret, argc, argv);
+		CliParse(cli, &ret, argc, argv);
 		switch(ret.retOption){
 		case 'h':
 			printf("HELP\n");

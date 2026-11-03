@@ -14,23 +14,29 @@ CliReturn CliParse(CliOption *cli, CliReturn *ret, int argc, const char *argv[])
 		ret->argc = 1;
 	}
 
-	if (ret->argc == argc && !ret->current)
-		return (CliReturn){.argc = ret->argc};
+	if (ret->argc == argc && !ret->current){
+		*ret = (CliReturn){.argc = ret->argc};
+		return *ret;
+	}
 
 	if (ret->argc < argc && !ret->current)
 		ret->argc++;
 
 	ret->current = (!ret->current) ? argv[ret->argc - 1] : ret->current;
 
-	if (argv[ret->argc-1][0] != '-' || strlen(argv[ret->argc-1]) < 2)
-		return (CliReturn){.argc = ret->argc};
+	if (argv[ret->argc-1][0] != '-' || strlen(argv[ret->argc-1]) < 2){
+		*ret = (CliReturn){.argc = ret->argc};
+		return *ret;
+	}
 
 	bool isInvalid = true;
 	bool isLongOption = false;
 
 	if (argv[ret->argc-1][1] == '-'){
-		if (argv[ret->argc-1][2] == '\0')
-			return (CliReturn){.argc = ret->argc};
+		if (argv[ret->argc-1][2] == '\0'){
+			*ret = (CliReturn){.argc = ret->argc};
+			return *ret;
+		}
 
 		isLongOption = true;
 		ret->current++;
@@ -39,7 +45,12 @@ CliReturn CliParse(CliOption *cli, CliReturn *ret, int argc, const char *argv[])
 	ret->current++;
 	
 	while (cli->option || cli->longOption){
-		if (isLongOption && cli->longOption){
+		if (isLongOption){
+			if (!cli->longOption){
+				cli++;
+				continue;
+			}
+
 			size_t longOptionSize = strlen(cli->longOption);
 			if (longOptionSize != strlen(ret->current)){
 				cli++;
@@ -62,8 +73,10 @@ CliReturn CliParse(CliOption *cli, CliReturn *ret, int argc, const char *argv[])
 		cli++;
 	}
 
-	if (isInvalid)
-		return (CliReturn){.retOption = -1, .argc = ret->argc};
+	if (isInvalid){
+		*ret = (CliReturn){.retOption = -1, .argc = ret->argc};
+		return *ret;
+	}
 
 	if (cli->arg == NO_ARGUMENT){
 		if (*(ret->current + 1) == '\0' || isLongOption){

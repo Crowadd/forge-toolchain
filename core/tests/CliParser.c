@@ -39,5 +39,5 @@ int main(int argc, const char *argv[])
 			break;
 		}
 	} while (ret.retOption);
-	printf("program args: %s\n", argv[ret.argc-1]);
+	printf("program args: %s\n", argv[ret.argc - 1]);
 }

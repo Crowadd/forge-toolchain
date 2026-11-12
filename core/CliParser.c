@@ -51,8 +51,16 @@ CliReturn CliParse(CliOption *cli, CliReturn *ret, int argc, const char *argv[])
 				continue;
 			}
 
+			size_t length;
+			const char *equal = strchr(ret->current, '=');
+			if (cli->arg != NO_ARGUMENT && equal)
+				length = equal - ret->current;
+			else
+				length = strlen(ret->current);
+
+
 			size_t longOptionSize = strlen(cli->longOption);
-			if (longOptionSize != strlen(ret->current)){
+			if (longOptionSize != length){
 				cli++;
 				continue;
 			}

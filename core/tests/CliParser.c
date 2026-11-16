@@ -32,12 +32,17 @@ int main(int argc, const char *argv[])
 			printf("TA FUNCIONANDO\n");
 			break;
 		case -1:
-			printf("Unknow option!\n");
+			printf("Unknown option!\n");
 			break;
 		case ':':
 			printf("Missing argument!\n");
 			break;
 		}
 	} while (ret.retOption);
-	printf("program args: %s\n", argv[ret.argc - 1]);
+
+	printf("ret.argc: %d\n", ret.argc);
+	printf("argc: %d\n", argc);
+	if (ret.argc < argc){
+		printf("First input: %s\n", argv[ret.argc]);
+	}
 }

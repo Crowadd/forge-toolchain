@@ -4,10 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-CliReturn CliParse(CliOption *cli, CliReturn *ret, int argc, const char *argv[])
+CliReturn CliParse(const CliOption *cli, CliReturn *ret, int argc, const char *argv[])
 {
 	if (!cli || !ret || !argv || argc < 2)	
-		return (CliReturn){0};
+		return (CliReturn){.argc = 1};
 
 	if (!ret->argc){
 		*ret = (CliReturn){0};
@@ -25,6 +25,7 @@ CliReturn CliParse(CliOption *cli, CliReturn *ret, int argc, const char *argv[])
 	ret->current = (!ret->current) ? argv[ret->argc - 1] : ret->current;
 
 	if (argv[ret->argc-1][0] != '-' || strlen(argv[ret->argc-1]) < 2){
+		ret->argc--;
 		*ret = (CliReturn){.argc = ret->argc};
 		return *ret;
 	}

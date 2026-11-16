@@ -15,6 +15,6 @@ typedef struct CliReturn {
 	int argc;
 } CliReturn;
 
-CliReturn CliParse(CliOption cli[], CliReturn *ret, int argc, const char *argv[]);
+CliReturn CliParse(const CliOption cli[], CliReturn *ret, int argc, const char *argv[]);
 
 #endif
